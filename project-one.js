@@ -21,63 +21,147 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
   constructor() {
     super();
     this.title = "";
-    this.t = this.t || {};
-    this.t = {
-      ...this.t,
-      title: "Title",
-    };
-    this.registerLocalization({
-      context: this,
-      localesPath:
-        new URL("./locales/project-one.ar.json", import.meta.url).href +
-        "/../",
-      locales: ["ar", "es", "hi", "zh"],
-    });
+    this.siteData = null;
+    this.items = [];
+    this.overview = null;
   }
 
-  // Lit reactive properties
   static get properties() {
     return {
-      ...super.properties,
       title: { type: String },
+      siteData: { type: Object },
+      items: { type: Array },
+      overview: { type: Object },
     };
   }
 
-  // Lit scoped styles
   static get styles() {
-    return [super.styles,
-    css`
-      :host {
-        display: block;
-        color: var(--ddd-theme-primary);
-        background-color: var(--ddd-theme-accent);
-        font-family: var(--ddd-font-navigation);
-      }
-      .wrapper {
-        margin: var(--ddd-spacing-2);
-        padding: var(--ddd-spacing-4);
-      }
-      h3 span {
-        font-size: var(--project-one-label-font-size, var(--ddd-font-size-s));
-      }
-    `];
+    return [
+      css`
+        :host {
+          display: block;
+          font-family: var(--ddd-font-navigation);
+          color: var(--ddd-theme-primary);
+          background-color: var(--ddd-theme-accent);
+        }
+        .input-container {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .overview {
+          padding: 1rem;
+          border-bottom: 1px solid #ddd;
+        }
+        .card-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+        .card {
+          background: #fff;
+          padding: 1rem;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          flex: 1 1 calc(25% - 1rem);
+        }
+        .card h4 {
+          margin-top: 0;
+        }
+        @media (max-width: 800px) {
+          .card {
+            flex: 1 1 calc(50% - 1rem);
+          }
+        }
+      `,
+    ];
   }
 
-  // Lit render the HTML
   render() {
     return html`
-<div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
-  <slot></slot>
-</div>`;
+      <div class="input-container">
+        <input id="urlInput" placeholder="Enter site URL" @input="${this._validateURL}" />
+        <button @click="${this._fetchData}">Analyze</button>
+      </div>
+      
+      ${this.overview
+        ? html`
+            <div class="overview">
+              <h3>Overview</h3>
+              <p><strong>Name:</strong> ${this.overview.name}</p>
+              <p><strong>Description:</strong> ${this.overview.description}</p>
+              <img src="${this.overview.logo}" alt="Site Logo" />
+              <p><strong>Theme:</strong> ${this.overview.theme}</p>
+              <p><strong>Created:</strong> ${this.overview.created}</p>
+              <p><strong>Last Updated:</strong> ${this.overview.lastUpdated}</p>
+            </div>
+          `
+        : ""}
+      
+      <div class="card-container">
+        ${this.items.map(
+          (item) => html`
+            <div class="card">
+              <h4>${item.title}</h4>
+              <p>${item.description}</p>
+              ${item.image ? html`<img src="${item.image}" alt="${item.title}" />` : ""}
+              <p>Last updated: ${item.lastUpdated}</p>
+              <a href="${item.url}" target="_blank">View Content</a>
+              <a href="${item.source}" target="_blank">View Source</a>
+            </div>
+          `
+        )}
+      </div>
+    `;
   }
 
-  /**
-   * haxProperties integration via file reference
-   */
-  static get haxProperties() {
-    return new URL(`./lib/${this.tag}.haxProperties.json`, import.meta.url)
-      .href;
+  async _fetchData() {
+    const url = this._getSiteJsonURL(this.shadowRoot.querySelector("#urlInput").value);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Invalid URL or site.json missing.");
+      const data = await response.json();
+      this._processData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      this.siteData = null;
+    }
+  }
+
+  _getSiteJsonURL(url) {
+    return url.endsWith("site.json") ? url : `${url}/site.json`;
+  }
+
+  _processData(data) {
+    if (!this._isValidSiteData(data)) {
+      console.error("Invalid site.json format.");
+      return;
+    }
+    this.overview = {
+      name: data.metadata.name,
+      description: data.metadata.description,
+      logo: data.metadata.logo,
+      theme: data.metadata.theme,
+      created: data.metadata.created,
+      lastUpdated: data.metadata.updated,
+    };
+    this.items = data.items.map((item) => ({
+      title: item.title,
+      description: item.description || "No description available",
+      image: item.image,
+      lastUpdated: item.lastUpdated,
+      url: item.slug ? `https://${data.metadata.domain}/${item.slug}` : "#",
+      source: `https://${data.metadata.domain}/index.html`,
+    }));
+  }
+
+  _isValidSiteData(data) {
+    return data && data.metadata && Array.isArray(data.items);
+  }
+
+  _validateURL() {
+    const input = this.shadowRoot.querySelector("#urlInput").value;
+    const isValid = input && input.startsWith("http");
+    this.shadowRoot.querySelector("button").disabled = !isValid;
   }
 }
 
