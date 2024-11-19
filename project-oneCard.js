@@ -102,30 +102,29 @@ export class projectOneCard extends DDDSuper(I18NMixin(LitElement)) {
 
   render() {
     const contentUrl = `${this.baseUrl}${this.slug}`;
-    const sourceUrl = `${this.baseUrl}${this.location}`;
+    const sourceUrl = `${this.baseUrl}${this.slug || ""}`;
 
-    return html`
-      <div class="card">
-        <div class="content">
-          <div class="title">${this.title}</div>
-        </div>
-        ${this.metadata?.image ? html`
-          <img src="${this.metadata.image}" alt="${this.title}" style="width: 322px; max-height: 200px; object-fit: cover;">
-        ` : ''}
-        <div class="content">
-          <div class="description">${this.description}</div>
-          <div class="metadata">
-            <div>Updated: ${this.dateToString(this.metadata?.updated)}</div>
-            <div class="spacer"></div>
-            <div>Read time: ${this.metadata?.readtime} minute(s)</div>
-          </div>
-          <div class="actions">
-            <a href="${contentUrl}" target="_blank" class="button primary">View Content</a>
-            <a href="${sourceUrl}" target="_blank" class="button secondary">View Source</a>
-          </div>
-        </div>
+return html`
+  <div class="card">
+    <div class="content">
+      <div class="title">${this.title || "Untitled"}</div>
+    </div>
+    ${this.metadata?.image ? html`
+      <img src="${this.metadata.image}" alt="${this.title}" style="width: 100%; max-height: 200px; object-fit: cover;">
+    ` : ''}
+    <div class="content">
+      <div class="description">${this.description || "No description available"}</div>
+      <div class="metadata">
+        <div>Updated: ${this.metadata?.updated ? this.dateToString(this.metadata.updated) : "N/A"}</div>
       </div>
-    `;
+      <div class="actions">
+        <a href="${contentUrl}" target="_blank" class="button primary">View Content</a>
+        <a href="${sourceUrl}" target="_blank" class="button secondary">View Source</a>
+      </div>
+    </div>
+  </div>
+`;
+
   }
 
   

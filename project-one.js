@@ -107,10 +107,11 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
       .results {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: var(--ddd-spacing-5);
-        padding: var(--ddd-spacing-4);
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--ddd-spacing-4);
+        width: 100%;
       }
+
 
       .site-overview {
         background: var(--ddd-theme-default-accent);
@@ -154,22 +155,27 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
     e.preventDefault();
     const input = this.shadowRoot.querySelector('input');
     const url = this.validateAndFormatUrl(input.value);
-    
+  
     if (!url) {
       this.error = 'Please enter a valid URL';
       return;
     }
-
+  
     this.loading = true;
     this.error = '';
     this.siteData = null;
     this.items = [];
-
+  
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch site data');
-      
+  
       const data = await response.json();
+  
+      if (!data.metadata || !Array.isArray(data.items)) {
+        throw new Error('Invalid site.json format');
+      }
+  
       this.siteData = data;
       this.items = data.items;
       this.baseUrl = url.replace('site.json', '');
@@ -179,6 +185,7 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
       this.loading = false;
     }
   }
+  
 
   dateToString(timestamp){
     const date = new Date(timestamp * 1000);
@@ -205,20 +212,21 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
         ${this.siteData ? html`
           <div class="site-overview">
-            <div class="site-title">${this.siteData.metadata.site.name}</div>
-            <p>${this.siteData.metadata.site.description}</p>
+            <div class="site-title">${this.siteData?.metadata?.site?.name || "No Name Available"}</div>
+            <p>${this.siteData?.metadata?.site?.description || "No Description Available"}</p>
             <div class="site-info">
-              <div>
-                <strong>Theme:</strong> ${this.siteData.metadata.theme.element}
-              </div>
-              <div>
-                <strong>Created:</strong> ${this.dateToString(this.siteData.metadata.site.created)}
-              </div>
-              <div>
-                <strong>Updated:</strong> ${this.dateToString(this.siteData.metadata.site.created)}
+               <div>
+                 <strong>Theme:</strong> ${this.siteData?.metadata?.theme?.element || "N/A"}
+               </div>
+                <div>
+                  <strong>Created:</strong> ${this.dateToString(this.siteData?.metadata?.site?.created)}
+                </div>
+                <div>
+                   <strong>Updated:</strong> ${this.dateToString(this.siteData?.metadata?.site?.updated)}
+                </div>
               </div>
             </div>
-          </div>
+
         ` : ''}
 
         <div class="results">
