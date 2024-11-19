@@ -20,10 +20,14 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
   constructor() {
     super();
+    this.loading = false;
     this.title = "";
+    this.items = [];
     this.siteData = null;
     this.items = [];
     this.overview = null;
+    this.date = '';
+    this.error = '';
   }
 
   static get properties() {
@@ -87,12 +91,15 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
         ? html`
             <div class="overview">
               <h3>Overview</h3>
+              <div>
+                <strong>Theme:</strong> ${this.siteData.metadata.theme.element}
+              </div>
               <p><strong>Name:</strong> ${this.overview.name}</p>
               <p><strong>Description:</strong> ${this.overview.description}</p>
               <img src="${this.overview.logo}" alt="Site Logo" />
               <p><strong>Theme:</strong> ${this.overview.theme}</p>
-              <p><strong>Created:</strong> ${this.overview.created}</p>
-              <p><strong>Last Updated:</strong> ${this.overview.lastUpdated}</p>
+              <p><strong>Created:</strong>  ${this.dateToString(this.siteData.metadata.site.created)}</p>
+              <p><strong>Last Updated:</strong> ${this.dateToString(this.siteData.metadata.site.created)}</p>
             </div>
           `
         : ""}
