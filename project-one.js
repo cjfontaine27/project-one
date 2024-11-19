@@ -41,110 +41,99 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   static get styles() {
-    return [
-      super.styles,
-      css`
-        :host {
-          display: block;
-          text-align: left;
-          font-family: var(--ddd-font-primary);
-        }
-  
-        .card {
-          background: #ffffff;
-          border-radius: 12px;
-          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-          overflow: hidden;
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-  
-        .card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-        }
-  
-        .image-container {
-          height: 180px;
-          background-color: #f0f0f0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-        }
-  
-        .image-container img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: cover;
-        }
-  
-        .content {
-          padding: 16px;
-        }
-  
-        .title {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 0 0 8px 0;
-          color: #333333;
-        }
-  
-        .description {
-          font-size: 14px;
-          color: #666666;
-          line-height: 1.4;
-          margin: 0 0 12px 0;
-          height: 40px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-  
-        .metadata {
-          font-size: 12px;
-          color: #999999;
-          margin-bottom: 16px;
-        }
-  
-        .actions {
-          display: flex;
-          gap: 8px;
-          justify-content: flex-start;
-        }
-  
-        .button {
-          padding: 8px 12px;
-          border-radius: 8px;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 500;
-          text-align: center;
-          display: inline-block;
-          transition: background 0.3s;
-        }
-  
-        .button.primary {
-          background: #007bff;
-          color: white;
-          border: none;
-        }
-  
-        .button.primary:hover {
-          background: #0056b3;
-        }
-  
-        .button.secondary {
-          background: #e9ecef;
-          color: #333333;
-          border: none;
-        }
-  
-        .button.secondary:hover {
-          background: #ced4da;
-        }
-      `,
-    ];
+    return [super.styles,css`
+      :host {
+        font-family: var(--ddd-font-primary);
+        display: block;
+        padding: var(--ddd-spacing-8);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: var(--ddd-spacing-5);
+        font-weight: var(--ddd-font-weight-bold);
+        font-size: var(--ddd-spacing-10);
+      }
+
+      .container{
+        display: flex;
+        flex-direction: column;
+        gap: var(--ddd-spacing-5, 20px);
+        max-width: 1500px;
+        align-items: center;
+        margin: auto;
+      }
+
+      .search {
+        display: flex;
+        width: 700px;
+        justify-content: center;
+        gap: var(--ddd-spacing-3);
+        margin-bottom: var(--ddd-spacing-9);
+      }
+
+      input {
+        width: 500px;
+        padding: var(--ddd-spacing-3) var(--ddd-spacing-4);
+        font-size: var(--ddd-spacing-4);
+        border: 1px solid var(--ddd-theme-default-limestoneMaxLight);
+        border-radius: var(--ddd-spacing-2);
+      }
+
+      button {
+        padding: var(--ddd-spacing-5);
+        background: var(--ddd-theme-default-beaverBlue);
+        color: var(--ddd-theme-default-white);
+        border: none;
+        border-radius: var(--ddd-spacing-2);
+        cursor: pointer;
+        font-weight: var(--ddd-font-weight-bold);
+        font-size: var(--ddd-spacing-3);
+      }
+
+      button:hover {
+        background: var(--ddd-theme-default-beaver80);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+      }
+
+      .error {
+        color: var(--ddd-theme-default-error);
+        text-align: center;
+        margin-bottom: var(--ddd-spacing-4);
+      }
+
+      .results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--ddd-spacing-4);
+        width: 100%;
+      }
+
+
+      .site-overview {
+        background: var(--ddd-theme-default-accent);
+        width: 500px;
+        padding: var(--ddd-spacing-7);
+        border-radius: var(--ddd-spacing-2);
+        margin-bottom: var(--ddd-spacing-2);
+        text-align: center;
+      }
+
+      .site-info {
+        display: grid;
+        gap: var(--ddd-spacing-4);
+        margin-top: var(--ddd-spacing-4);
+      }
+
+      .site-title {
+        font-weight: var(--ddd-font-weight-bold);
+        font-size: var(--ddd-spacing-8);
+      }
+    `];
   }
-  
 
   validateAndFormatUrl(url) {
     try {
