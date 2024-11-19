@@ -123,8 +123,8 @@ export class projectOneCard extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   static get tag() {
-    return "hax-card";
+    return "project-oneCard";
   }
 }
 
-customElements.define(HaxCard.tag, HaxCard);
+customElements.define(projectOneCard.tag, projectOneCard);
