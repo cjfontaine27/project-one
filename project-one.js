@@ -13,6 +13,9 @@ import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
  * @element project-one
  */
 export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
+  static get tag() {
+    return "project-one";
+  }
 
   constructor() {
     super();
@@ -234,9 +237,6 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
     `;
   }
 
-  static get tag() {
-    return "project-one";
-  }
 }
 
 

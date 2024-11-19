@@ -3,6 +3,11 @@ import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 
 export class projectOneCard extends DDDSuper(I18NMixin(LitElement)) {
+
+
+    static get tag(){
+        return "project-onecard";
+    }
   
   constructor() {
     super();
@@ -35,6 +40,7 @@ export class projectOneCard extends DDDSuper(I18NMixin(LitElement)) {
         background: var(--ddd-theme-default-white);
         overflow: hidden;
         border: 1px solid black;
+      }
 
       .content {
         padding: var(--ddd-spacing-4);
@@ -122,9 +128,7 @@ export class projectOneCard extends DDDSuper(I18NMixin(LitElement)) {
     `;
   }
 
-  static get tag() {
-    return "project-oneCard";
-  }
+  
 }
 
 customElements.define(projectOneCard.tag, projectOneCard);
