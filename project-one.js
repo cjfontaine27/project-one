@@ -220,14 +220,14 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
         <div class="results">
           ${this.items.map(item => html`
-            <hax-card
+            <project-oneCard
               .title=${item.title}
               .description=${item.description}
               .slug=${item.slug}
               .baseUrl=${this.baseUrl}
               .metadata=${item.metadata}
               .location=${item.location}
-            ></hax-card>
+            ></project-oneCard>
           `)}
         </div>
       </div>
@@ -235,7 +235,7 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   static get tag() {
-    return "hax-search";
+    return "project-one";
   }
 }
 
