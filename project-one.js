@@ -134,7 +134,8 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
       margin: 0 auto 16px auto;
       display: block;
       border-radius: 8px;
-    }
+      object-fit: contain; /* Ensures the image scales correctly */
+      }
 
       .site-title {
         font-weight: var(--ddd-font-weight-bold);
@@ -220,15 +221,17 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
         ${this.siteData ? html`
   <div class="site-overview">
-  ${this.siteData?.metadata?.site?.logo
+  ${logoUrl
     ? html`<img 
-          src="${this.siteData.metadata.site.logo}" 
+          src="${logoUrl}" 
           alt="${this.siteData.metadata.site.name} Logo" 
           class="site-logo"
         />`
     : ""}
   <div class="site-title">${this.siteData?.metadata?.site?.name || "No Name Available"}</div>
   <p>${this.siteData?.metadata?.site?.description || "No Description Available"}</p>
+</div>
+  
   <div class="site-info">
     <div>
       <strong>Theme:</strong> ${this.siteData?.metadata?.theme?.element || "N/A"}
