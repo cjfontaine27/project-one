@@ -128,6 +128,14 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
         margin-top: var(--ddd-spacing-4);
       }
 
+      .site-logo {
+      max-width: 120px;
+      max-height: 120px;
+      margin: 0 auto 16px auto;
+      display: block;
+      border-radius: 8px;
+    }
+
       .site-title {
         font-weight: var(--ddd-font-weight-bold);
         font-size: var(--ddd-spacing-8);
@@ -211,23 +219,31 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
         ${this.error ? html`<div class="error">${this.error}</div>` : ''}
 
         ${this.siteData ? html`
-          <div class="site-overview">
-            <div class="site-title">${this.siteData?.metadata?.site?.name || "No Name Available"}</div>
-            <p>${this.siteData?.metadata?.site?.description || "No Description Available"}</p>
-            <div class="site-info">
-               <div>
-                 <strong>Theme:</strong> ${this.siteData?.metadata?.theme?.element || "N/A"}
-               </div>
-                <div>
-                  <strong>Created:</strong> ${this.dateToString(this.siteData?.metadata?.site?.created)}
-                </div>
-                <div>
-                   <strong>Updated:</strong> ${this.dateToString(this.siteData?.metadata?.site?.updated)}
-                </div>
-              </div>
-            </div>
+  <div class="site-overview">
+  ${this.siteData?.metadata?.site?.logo
+    ? html`<img 
+          src="${this.siteData.metadata.site.logo}" 
+          alt="${this.siteData.metadata.site.name} Logo" 
+          class="site-logo"
+        />`
+    : ""}
+  <div class="site-title">${this.siteData?.metadata?.site?.name || "No Name Available"}</div>
+  <p>${this.siteData?.metadata?.site?.description || "No Description Available"}</p>
+  <div class="site-info">
+    <div>
+      <strong>Theme:</strong> ${this.siteData?.metadata?.theme?.element || "N/A"}
+    </div>
+    <div>
+      <strong>Created:</strong> ${this.dateToString(this.siteData?.metadata?.site?.created)}
+    </div>
+    <div>
+      <strong>Updated:</strong> ${this.dateToString(this.siteData?.metadata?.site?.updated)}
+    </div>
+  </div>
+</div>
 
-        ` : ''}
+` : ''}
+
 
         <div class="results">
           ${this.items.map(item => html`
