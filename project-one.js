@@ -221,17 +221,15 @@ export class projectOne extends DDDSuper(I18NMixin(LitElement)) {
 
         ${this.siteData ? html`
   <div class="site-overview">
-  ${logoUrl
+  ${this.siteData?.metadata?.site?.logo
     ? html`<img 
-          src="${logoUrl}" 
+          src="${this.siteData.metadata.site.logo}" 
           alt="${this.siteData.metadata.site.name} Logo" 
           class="site-logo"
         />`
     : ""}
   <div class="site-title">${this.siteData?.metadata?.site?.name || "No Name Available"}</div>
   <p>${this.siteData?.metadata?.site?.description || "No Description Available"}</p>
-</div>
-  
   <div class="site-info">
     <div>
       <strong>Theme:</strong> ${this.siteData?.metadata?.theme?.element || "N/A"}
